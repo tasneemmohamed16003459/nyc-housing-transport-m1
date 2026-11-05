@@ -5,7 +5,7 @@
 - **Housing dataset:** DOB NOW: Build - Job Application Filings (`w9ak-ipjd`) - https://data.cityofnewyork.us/d/w9ak-ipjd
 - **Transportation dataset:** Motor Vehicle Collisions - Crashes (`h9gi-nx95`) - https://data.cityofnewyork.us/d/h9gi-nx95 (outside the catalog; the notebook explains how we found it and includes the feasibility check)
 - **Period:** 1 Jan 2022 - 31 Dec 2025. **Integration level:** ZIP code x year x month.
-- **Deployed website:** _paste the Vercel link here_
+- **Deployed website:** https://nyc-housing-transport-m1.vercel.app
 
 ## Repository contents
 | File | What it is |
