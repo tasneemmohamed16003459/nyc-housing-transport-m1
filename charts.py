@@ -54,6 +54,11 @@ def show_r(r):
     return "n/a" if r is None or pd.isna(r) else f"{r:.2f}"
 
 
+def spearman(s1, s2):
+    """Spearman rank correlation using ranks (does not require scipy)."""
+    return s1.rank().corr(s2.rank())
+
+
 def key_findings(h, c):
     """A few plain-English findings calculated from the data on screen (used in the notebook story and on the website)."""
     joined = join_data(h, c)
@@ -69,7 +74,7 @@ def key_findings(h, c):
         lines.append(f"**{ratio.index[0].title()}** has the most crashes per 100 filings ({ratio.iloc[0]:,.0f}) and "
                      f"**{ratio.index[-1].title()}** the fewest ({ratio.iloc[-1]:,.0f}).")
     if len(z) >= 5:
-        rho = z["filings"].corr(z["crashes"], method="spearman")
+        rho = spearman(z["filings"], z["crashes"])
         lines.append(f"Across ZIP codes, filings and crashes have a rank correlation of **{show_r(rho)}**. "
                      "Big, busy ZIP codes tend to have both, so this does **not** show that construction causes crashes.")
     return lines
@@ -165,7 +170,7 @@ def chart_5(h, c):
                      hover_data={"filings": ":,", "new_units": ":,", "crashes": ":,"},
                      labels={"new_units": "Net new dwelling units filed", "crashes": "Crashes"})
     r = add_trend_line(fig, z["new_units"], z["crashes"])
-    rho = z["new_units"].corr(z["crashes"], method="spearman")
+    rho = spearman(z["new_units"], z["crashes"])
     fig.update_layout(title=f"Q5 - New housing units vs crashes per ZIP (r = {show_r(r)}, Spearman = {show_r(rho)})")
     return fig
 
@@ -247,7 +252,7 @@ def chart_10(h, c):
     z = z[z["avg_cost_per_filing"] > 0]
     if len(z) < 3:
         return no_data("Need ZIP codes with 5+ filings and 10+ crashes")
-    rho = z["avg_cost_per_filing"].corr(z["injured_per_100_crashes"], method="spearman")
+    rho = spearman(z["avg_cost_per_filing"], z["injured_per_100_crashes"])
     return px.scatter(z, x="avg_cost_per_filing", y="injured_per_100_crashes", size="crashes", color="borough", log_x=True,
                       hover_name="zip_label", size_max=30, hover_data={"filings": ":,", "crashes": ":,"},
                       labels={"avg_cost_per_filing": "Average project cost per filing ($, log scale)",

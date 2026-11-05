@@ -190,7 +190,10 @@ def generate_report(n_clicks, boroughs, years, job_types, factors):
             kpi_card("Crashes", int(c["crashes"].sum())),
             kpi_card("People injured", int(c["injured"].sum())),
             kpi_card("People killed", int(c["killed"].sum()))]
-    findings = "\n".join("- " + line for line in charts.key_findings(h, c))
+    try:
+        findings = "\n".join("- " + line for line in charts.key_findings(h, c))
+    except Exception as error:
+        findings = f"- Could not generate findings: {error}"
     chosen = [f"{name}: {', '.join(map(str, values))}" for name, values in
               [("Borough", boroughs), ("Year", years), ("Job type", job_types), ("Factor", factors)] if values]
     status = "Report generated for: " + (" | ".join(chosen) if chosen else "all data")
